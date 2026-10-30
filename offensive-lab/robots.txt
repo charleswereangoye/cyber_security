@@ -1,4 +1,0 @@
-# robots.txt for Offensive Lab
-User-agent: *
-Disallow: /admin/
-

@@ -1,0 +1,3 @@
+# robots.txt for Offensive Lab - Level 1
+User-agent: *
+Disallow: /admin/
