@@ -12,10 +12,15 @@ elif [ "$LEVEL" == "2" ]; then
     TARGET_DIR="$REPO_ROOT/offensive/level-02-extension-fuzzing"
     IMAGE_NAME="offensive-level-2"
     echo "[*] Selected Level 2: Extension Fuzzing & Leaked Backups"
+elif [ "$LEVEL" == "3" ]; then
+    TARGET_DIR="$REPO_ROOT/offensive/level-03-parameter-tampering"
+    IMAGE_NAME="offensive-level-3"
+    echo "[*] Selected Level 3: Parameter Tampering & IDOR"
 else
-    echo "Usage: $0 [1|2]"
+    echo "Usage: $0 [1|2|3]"
     echo "  1 - Start Level 1 (Robots.txt & Basic Recon)"
     echo "  2 - Start Level 2 (Extension Fuzzing & Leaked Backups)"
+    echo "  3 - Start Level 3 (Parameter Tampering & IDOR)"
     exit 1
 fi
 
