@@ -12,7 +12,8 @@ cyber_security/
 │   ├── README.md                    # Methodology and module overview
 │   ├── level-01-recon-robots/       # Information disclosure via robots.txt
 │   ├── level-02-extension-fuzzing/  # Sensitive file leakage and extension fuzzing
-│   └── level-03-parameter-tampering/# Parameter tampering and IDOR vulnerabilities
+│   ├── level-03-parameter-tampering/# Parameter tampering and IDOR vulnerabilities
+│   └── level-04-auth-and-credentials/# Authentication flaws and default credentials
 │
 ├── defensive/                       # Defensive security exercises (Blue Team)
 │   ├── README.md                    # Defensive methodology and log monitoring
@@ -65,6 +66,11 @@ Use `start-lab.sh` followed by the level number to build and run the correspondi
   ./start-lab.sh 3
   ```
 
+- Launch Level 4:
+  ```bash
+  ./start-lab.sh 4
+  ```
+
 Once started, the target server binds locally to port 8080: `http://127.0.0.1:8080`.
 
 ### 2. Stop the Active Target
@@ -87,7 +93,8 @@ Detailed instructions and background theory are available in [offensive/README.m
 | [Level 1](offensive/level-01-recon-robots/) | Reconnaissance & Discovery | `robots.txt` information disclosure, directory enumeration | Beginner |
 | [Level 2](offensive/level-02-extension-fuzzing/) | Extension Fuzzing & Leaks | Gobuster `-x` flag, backup file leakage, auth bypass | Beginner |
 | [Level 3](offensive/level-03-parameter-tampering/) | Parameter Tampering & IDOR | Insecure Direct Object References, URL query manipulation | Beginner |
-| Level 4 | Authentication & Credentials | Form authentication, weak credential testing | Beginner-Intermediate (Planned) |
+| [Level 4](offensive/level-04-auth-and-credentials/) | Authentication & Credentials | HTTP POST requests, username enumeration, default credentials | Beginner-Intermediate |
+| Level 5 | SQL Injection (SQLi) | Database query manipulation, input sanitization | Intermediate (Planned) |
 
 ### Defensive Track (Blue Team)
 

@@ -16,11 +16,16 @@ elif [ "$LEVEL" == "3" ]; then
     TARGET_DIR="$REPO_ROOT/offensive/level-03-parameter-tampering"
     IMAGE_NAME="offensive-level-3"
     echo "[*] Selected Level 3: Parameter Tampering & IDOR"
+elif [ "$LEVEL" == "4" ]; then
+    TARGET_DIR="$REPO_ROOT/offensive/level-04-auth-and-credentials"
+    IMAGE_NAME="offensive-level-4"
+    echo "[*] Selected Level 4: Authentication & Default Credentials"
 else
-    echo "Usage: $0 [1|2|3]"
+    echo "Usage: $0 [1|2|3|4]"
     echo "  1 - Start Level 1 (Robots.txt & Basic Recon)"
     echo "  2 - Start Level 2 (Extension Fuzzing & Leaked Backups)"
     echo "  3 - Start Level 3 (Parameter Tampering & IDOR)"
+    echo "  4 - Start Level 4 (Authentication & Default Credentials)"
     exit 1
 fi
 
