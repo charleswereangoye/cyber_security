@@ -1,91 +1,72 @@
-# Level 1: Information Disclosure & Robots.txt Discovery
+# Level 1: Reconnaissance & Robots.txt Discovery
+
+## Metadata
+- **Track**: Offensive Security
+- **Difficulty**: Beginner
+- **Category**: Web Reconnaissance & Content Discovery
+
+---
 
 ## Overview
-- **Track**: Offensive Security (Red Team)
-- **Difficulty**: Very Easy / Beginner
-- **Category**: Web Reconnaissance & Content Discovery
-- **Estimated Time**: 15 minutes
+
+Search engine indexing relies on `robots.txt` files to respect crawl boundaries. However, developers sometimes use `robots.txt` as an access control mechanism, placing restricted paths in the `Disallow` directives. Because `robots.txt` is publicly accessible, it often provides an immediate roadmap to internal or administrative interfaces.
 
 ---
 
-## Background & Theory
+## Objectives
 
-When websites are indexed by search engines (like Google, Bing, DuckDuckGo), webmasters use a standard file called `robots.txt` placed in the website root (`/robots.txt`). This file tells web crawlers which pages or directories they are **not** allowed to crawl.
-
-> [!WARNING]
-> Many developers mistakenly assume that adding a directory to `robots.txt` hides or secures it. In reality, `robots.txt` is completely public! Attackers routinely inspect `robots.txt` as step one of reconnaissance to find sensitive hidden paths.
-
----
-
-## Lab Objectives
-
-1. Spin up the Level 1 container using Podman.
-2. Perform passive reconnaissance on `http://127.0.0.1:8080/robots.txt`.
-3. Use **Gobuster** to perform active directory enumeration against the target.
-4. Discover the hidden administrative portal and retrieve **Flag 1**.
+1. Deploy the Level 1 container via Podman.
+2. Inspect `robots.txt` using passive reconnaissance.
+3. Perform active directory enumeration with Gobuster.
+4. Access the discovered administrative dashboard to obtain the flag.
 
 ---
 
-## How to Run This Lab
+## Deployment
 
-### Option 1: From the Repository Root
+From the repository root:
 ```bash
 ./start-lab.sh 1
 ```
 
-### Option 2: Manually with Podman
-```bash
-cd offensive/level-01-recon-robots
-podman build -t offensive-level-1 .
-podman run -d --name offensive-lab -p 8080:8080 localhost/offensive-level-1
-```
-
-Verify the lab is running:
+Confirm service availability:
 ```bash
 curl -I http://127.0.0.1:8080/
 ```
 
 ---
 
-## Attack Walkthrough
+## Walkthrough
 
-### Step 1: Reconnaissance
-Check if the webmaster left a `robots.txt` file:
+### Step 1: Passive Reconnaissance
+Retrieve the site's robot exclusion configuration:
 ```bash
-curl http://127.0.0.1:8080/robots.txt
+curl -s http://127.0.0.1:8080/robots.txt
 ```
-*Expected Result: You will see a `Disallow: /admin/` directive.*
+The response contains a `Disallow: /admin/` directive.
 
-### Step 2: Directory Brute-Forcing with Gobuster
-Even without checking `robots.txt`, Gobuster can find hidden directories using a wordlist:
+### Step 2: Directory Enumeration
+Run Gobuster using the bundled wordlist to confirm the directory's existence:
 ```bash
-gobuster dir -u http://127.0.0.1:8080 -w /home/chaleeblack/common.txt
+gobuster dir -u http://127.0.0.1:8080 -w wordlists/common.txt
 ```
 
-### Step 3: Exploitation & Flag Retrieval
-Navigate to the discovered directory in your browser:
-```text
-http://127.0.0.1:8080/admin/
-```
-Or retrieve it using `curl`:
+### Step 3: Flag Extraction
+Access the administrative panel via browser or command line:
 ```bash
-curl -s http://127.0.0.1:8080/admin/ | grep "Flag{"
+curl -s http://127.0.0.1:8080/admin/ | grep -i "Flag{"
 ```
 
 ---
 
-## Challenge Solution
-<details>
-<summary>Click to view Flag & Key Takeaway</summary>
+## Summary and Remediation
 
-- **Flag**: `Flag{robots_txt_recon_success}`
-- **Offensive Takeaway**: Never trust `robots.txt` for security. It is a roadmap for attackers.
-- **Defensive Fix**: Protect administrative panels with robust authentication and access control lists (ACLs), not obscurity.
-</details>
+- **Root Cause**: Reliance on security through obscurity.
+- **Remediation**: Sensitive administrative interfaces must be protected by robust authentication, IP whitelisting, or network-level access controls, rather than relying on search crawler directives.
 
 ---
 
-## Clean Up
+## Teardown
 ```bash
 ./stop-lab.sh
 ```

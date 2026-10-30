@@ -1,27 +1,28 @@
-# Defensive Security Track (Blue Team)
+# Defensive Security Track
 
-Welcome to the **Defensive Security Track**. In this section, we study how to detect, analyze, and defend against the attacks demonstrated in the Offensive Track.
+This track focuses on threat detection, log analysis, security operations center (SOC) triage, and system hardening techniques.
 
 ---
 
 ## Core Focus Areas
 
-1. **Log Analysis & SIEM**: Inspecting web server logs, syslogs, and network captures to uncover attack patterns.
-2. **Threat Detection**: Writing detection rules (Snort, Suricata, YARA, Sigma) and Python scripts to catch automated scanners.
-3. **Hardening & Prevention**: Implementing principle of least privilege, rate limiting, and web server configuration defenses.
+1. **Log Analysis & Monitoring**: Identifying malicious or automated web patterns within server and access logs.
+2. **Threat Detection**: Developing detection rules and automation scripts to spot brute-force attacks and vulnerability scanning.
+3. **Remediation & Hardening**: Implementing principle of least privilege, rate limiting, and web server configuration controls.
 
 ---
 
-## Lab Curriculum
+## Modules
 
-| Lab | Topic | Focus | Difficulty |
-| :--- | :--- | :--- | :--- |
-| **[Lab 1](level-01-log-analysis/)** | Web Scanner Detection | Detecting Gobuster activity in HTTP access logs, analyzing User-Agents and 404 spikes | 🟢 Easy |
+| Module | Description | Objectives |
+| :--- | :--- | :--- |
+| [Lab 1: Web Scanner Detection](level-01-log-analysis/) | Detection of Gobuster scans in access logs | Analyze request velocity, User-Agent signatures, and 404 response ratios. |
 
 ---
 
-## Philosophy: "Know the Attack to Build the Defense"
+## Recommended Workflow
 
-A strong security practitioner understands both sides:
-* The **Offensive** mindset exposes blind spots and misconfigurations.
-* The **Defensive** mindset builds resilient, observable systems that prevent exploitation.
+1. Perform the corresponding offensive exercise to observe the attack perspective.
+2. Review the resulting web server logs or provided sample logs.
+3. Develop and execute detection scripts or queries to isolate attacker traffic.
+4. Apply the recommended server hardening measures.

@@ -1,71 +1,67 @@
-# Defensive Lab 1: Detecting Automated Fuzzers & Web Scanners
+# Defensive Lab 1: Web Scanner & Fuzzer Detection
+
+## Metadata
+- **Track**: Defensive Security
+- **Difficulty**: Beginner
+- **Category**: Security Operations Center (SOC), Log Analysis, Threat Detection
+
+---
 
 ## Overview
-- **Track**: Defensive Security (Blue Team)
-- **Difficulty**: Easy
-- **Category**: Security Operations Center (SOC), Log Analysis, Threat Detection
-- **Estimated Time**: 20 minutes
+
+Automated tools such as Gobuster, DirBuster, and ffuf generate distinct operational signatures in web server access logs (`access.log`):
+
+1. **High Request Velocity**: Large volumes of HTTP requests submitted within narrow time windows.
+2. **Elevated 404 Error Rates**: Unusually high ratios of `404 Not Found` responses relative to baseline traffic.
+3. **Tool-Specific User-Agent Headers**: Default identification strings (e.g., `gobuster/<version>`).
+4. **Targeting of Sensitive Paths**: Systematic probing for common administrative or configuration endpoints (`.env`, `.git`, `backup.zip`).
 
 ---
 
-## Background & Theory
+## Objectives
 
-Offensive tools like Gobuster, DirBuster, and ffuf are fast, but they are also **loud**. Unless an attacker manually changes their User-Agent or throttles their rate of requests, their activity leaves unmistakable fingerprints in web server logs (`access.log`):
-
-1. **High Request Velocity**: Hundreds of requests per second from a single IP address.
-2. **Abnormal 404 Spikes**: High ratio of `404 Not Found` responses compared to `200 OK`.
-3. **Default User-Agent Signatures**: Gobuster sends `User-Agent: gobuster/<version>` unless told otherwise (`-a` flag).
-4. **Targeted Sensitive Endpoints**: Probing for common paths (`.env`, `.git`, `wp-admin`, `backup.zip`).
+1. Analyze standard HTTP Combined Log Format records.
+2. Identify automated scanning patterns using command-line triage tools.
+3. Execute the provided Python log detection script to summarize threat activity.
+4. Review standard hardening techniques to block automated scanning.
 
 ---
 
-## Lab Objectives
+## Practical Analysis
 
-1. Understand standard HTTP access log formats.
-2. Inspect `sample-access.log` to identify attacker behavior.
-3. Use command-line tools (`grep`, `awk`, `sort`) and the included Python detection script to detect brute-force activity.
-4. Learn defensive hardening rules to mitigate this attack.
-
----
-
-## Hands-On Exercise
-
-### Step 1: Run the Detection Script
-Run the automated detection script against the sample log:
+### Automated Detection Script
+Execute `detect_scan.py` against the included log sample:
 ```bash
 ./detect_scan.py sample-access.log
 ```
 
-### Step 2: Manual Log Analysis with Linux Commands
-Real SOC analysts often use Linux utilities for quick triage:
+### Manual CLI Triage
+Standard Linux utilities provide fast triage for incident response:
 
-1. **Identify the top requesting IP addresses**:
+1. **Count requests by source IP**:
    ```bash
    awk '{print $1}' sample-access.log | sort | uniq -c | sort -nr
    ```
-2. **Find all requests made by Gobuster**:
+
+2. **Filter requests by Gobuster User-Agent**:
    ```bash
    grep -i "gobuster" sample-access.log
    ```
-3. **Check which sensitive files were successfully accessed (HTTP 200)**:
+
+3. **Identify endpoints that responded successfully (`HTTP 200`) during the scan**:
    ```bash
    grep " 200 " sample-access.log | grep -i "gobuster"
    ```
 
 ---
 
-## Blue Team Defensive Recommendations
+## Remediation and Hardening
 
-How do we stop attackers from exploiting these vulnerabilities in production?
-
-1. **Web Application Firewall (WAF) / Rate Limiting**:
-   Use Nginx rate limiting or Cloudflare WAF to drop requests exceeding reasonable user thresholds (e.g., limit to 10 requests/second per IP).
-2. **Fail2ban Integration**:
-   Configure Fail2ban to parse access logs and automatically add temporary firewall (`iptables` / `nftables`) bans for IPs generating excessive 404 errors.
-3. **Server Configuration Hardening**:
-   Block direct access to sensitive extensions at the web server level (Nginx/Apache):
+1. **Rate Limiting**: Enforce request rate thresholds (e.g., via Nginx `limit_req_zone` or WAF policies) to drop traffic exceeding standard browsing speeds.
+2. **Automated IP Blocking**: Integrate tools such as Fail2ban to monitor log events and dynamically ban IPs that generate sustained 404 response bursts.
+3. **Extension Restrictions**: Configure web servers to explicitly deny access to sensitive backup extensions:
    ```nginx
-   # Nginx example: Deny access to hidden files and backup extensions
+   # Nginx: Block direct access to backup files and sensitive extensions
    location ~* \.(bak|config|sql|old|env|git|txt)$ {
        deny all;
        return 404;

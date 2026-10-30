@@ -1,63 +1,46 @@
-# Offensive Security Track (Red Team)
+# Offensive Security Track
 
-Welcome to the **Offensive Security Practice Track**. This track teaches practical web application penetration testing, reconnaissance, vulnerability discovery, and exploitation techniques using hands-on CTF-style challenges.
-
----
-
-## Prerequisites & Tools
-
-Before running these labs, ensure you have the following installed on your machine:
-
-1. **Podman** (Rootless container engine):
-   ```bash
-   podman --version
-   ```
-2. **Gobuster** (High-speed directory and file brute-forcing tool):
-   ```bash
-   gobuster version
-   ```
-3. **Wordlists**:
-   Standard wordlists (e.g., `common.txt` or `directory-list-2.3-medium.txt` from SecLists).
+This track covers web application security testing, reconnaissance, content discovery, and vulnerability assessment.
 
 ---
 
-## Offensive Methodology
+## Environment Setup
 
-Each level follows the standard penetration testing lifecycle:
+Ensure the following tools are available:
 
+1. **Podman**
+2. **Gobuster**
+3. **Wordlists**: A standard wordlist is bundled at `wordlists/common.txt`. Additional wordlists can be pulled from SecLists if desired.
+
+---
+
+## Methodology
+
+Each exercise simulates a common phase of the penetration testing lifecycle:
+
+1. **Reconnaissance**: Passive inspection of site structure, response headers, and metadata (`robots.txt`, comments).
+2. **Enumeration**: Automated scanning using wordlists and targeted file extensions.
+3. **Analysis**: Interpreting HTTP response codes (`200`, `301`, `403`, `404`) and reviewing discovered assets.
+4. **Exploitation**: Leveraging findings to access protected functionality or extract sensitive data.
+
+---
+
+## Modules
+
+| Module | Description | Objectives |
+| :--- | :--- | :--- |
+| [Level 1: Reconnaissance & Robots.txt](level-01-recon-robots/) | Information disclosure via `robots.txt` | Practice baseline directory enumeration and flag retrieval. |
+| [Level 2: Extension Fuzzing & Backups](level-02-extension-fuzzing/) | Fuzzing file extensions for developer leaks | Identify unlinked backup files and bypass access restrictions. |
+| Level 3: Parameter Fuzzing & Injection | Parameter discovery and command execution | In development. |
+
+---
+
+## Usage
+
+Start any offensive lab from the repository root:
+
+```bash
+./start-lab.sh 1    # Start Level 1
+./start-lab.sh 2    # Start Level 2
+./stop-lab.sh       # Stop running target
 ```
-┌─────────────────────────────────┐
-│ 1. Passive & Active Recon       │ (Inspect robots.txt, headers, source)
-└────────────────┬────────────────┘
-                 │
-┌────────────────▼────────────────┐
-│ 2. Enumeration & Fuzzing        │ (Gobuster directory & extension scans)
-└────────────────┬────────────────┘
-                 │
-┌────────────────▼────────────────┐
-│ 3. Vulnerability Analysis       │ (Analyze leaks, 403 endpoints, parameters)
-└────────────────┬────────────────┘
-                 │
-┌────────────────▼────────────────┐
-│ 4. Exploitation & Flags         │ (Auth bypass, extract sensitive data)
-└─────────────────────────────────┘
-```
-
----
-
-## Lab Curriculum
-
-| Level | Topic | Key Skills | Difficulty |
-| :--- | :--- | :--- | :--- |
-| **[Level 1](level-01-recon-robots/)** | Robots.txt & Basic Recon | `robots.txt` information disclosure, default Gobuster scans | 🟢 Very Easy |
-| **[Level 2](level-02-extension-fuzzing/)** | Extension Fuzzing & Leaks | Gobuster `-x` flag (`.bak`, `.txt`), HTTP 403 analysis, auth bypass | 🟡 Easy |
-| **Level 3** | Parameter Fuzzing & Injection | Coming soon | 🟠 Intermediate |
-
----
-
-## Quick Lab Commands
-
-From the repository root:
-* Start Level 1: `./start-lab.sh 1`
-* Start Level 2: `./start-lab.sh 2`
-* Stop target: `./stop-lab.sh`
